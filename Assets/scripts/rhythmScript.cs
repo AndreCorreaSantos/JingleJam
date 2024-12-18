@@ -24,10 +24,6 @@ public class rhythmScript : MonoBehaviour
             StartCoroutine(PlayParticleSystem());
         }
     }
-
-    private void setParticleTemplate1(ParticleSystem ps){
-        ps.gra
-    }
     private IEnumerator PlayParticleSystem()
     {
         _particleSystem.Play();
