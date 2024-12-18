@@ -8,18 +8,17 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Minigame Settings")]
-    [SerializeField] private string minigameDataPath = "MinigameData/Active"; // Folder in Resources
+    [SerializeField] private string minigameDataPath = "MinigameData/Active";
     [SerializeField] private List<MinigameData> availableMinigames;
     [SerializeField] private int numberOfMinigamesToPlay = 3;
 
-    // Track current game progress
+    // Game progress
     private List<MinigameData> selectedMinigames;
     private int currentMinigameIndex = 0;
     protected MinigameData currentMinigameData;
 
     private void Awake()
     {
-        // Singleton pattern setup
         if (Instance == null)
         {
             Instance = this;
@@ -37,7 +36,6 @@ public class GameManager : MonoBehaviour
     {
         availableMinigames = new List<MinigameData>();
 
-        // Load all MinigameData assets from Resources folder
         MinigameData[] loadedData = Resources.LoadAll<MinigameData>(minigameDataPath);
 
         if (loadedData.Length == 0)
@@ -108,6 +106,18 @@ public class GameManager : MonoBehaviour
     public MinigameData GetCurrentMinigameData()
     {
         return currentMinigameData;
+    }
+
+    public List<MinigameData> GetAvailableMinigames()
+    {
+        return availableMinigames;
+    }
+
+    public void PlaySpecificMinigame(MinigameData minigame)
+    {
+        currentMinigameData = minigame;
+        SceneManager.LoadScene(minigame.sceneName);
+        Debug.Log($"Debug Mode: Loading specific minigame: {minigame.minigameName}");
     }
 
 }
