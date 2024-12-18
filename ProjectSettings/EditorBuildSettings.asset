@@ -8,6 +8,24 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/MainMenuScene.unity
+    guid: 1d5cbfc454e33b14e955504878c22c2c
+  - enabled: 1
+    path: Assets/Scenes/MinigameScenes/CandyPainterScene.unity
+    guid: 5388fcf6e5ef6ed4d968815ef0f644bd
+  - enabled: 1
+    path: Assets/Scenes/MinigameScenes/ElfChoirScene.unity
+    guid: 48f2f75804aa03543befb02382573d96
+  - enabled: 1
+    path: Assets/Scenes/MinigameScenes/SnowballBounceScene.unity
+    guid: 000df8b8a05472c47824fe48af2c3470
+  - enabled: 1
+    path: Assets/Scenes/MinigameScenes/WrapToTheBeatScene.unity
+    guid: 4b22e3ac0b6e4b74bb11c308d1af3118
+  - enabled: 1
+    path: Assets/Scenes/MinigameScenes/TestMinigameScene.unity
+    guid: 67c2bf8ad3386ad4b98d5e41ce2a8964
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
