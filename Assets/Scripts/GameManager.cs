@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BeatScroller beatScroller;
     public int  currentScore;
     public int scorePerNote = 100;
+    public int scorePerGoodNote = 125;
+    public int scorePerPerfectNote = 150;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text multiText;
     [SerializeField] private int currentMultiplier;
@@ -37,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     public void NoteHit()
     {
-        Debug.Log("Hit On Time");
+        //Debug.Log("Hit On Time");
         if (currentMultiplier - 1 < multiplierThresholds.Length)
         {
             multiplierTracker++;
@@ -47,7 +49,7 @@ public class GameManager : MonoBehaviour
                 currentMultiplier++;
             }
         }
-        currentScore += scorePerNote * currentMultiplier;
+        //currentScore += scorePerNote * currentMultiplier;
         multiText.text = "Multiplier: x" + currentMultiplier;
         scoreText.text = "Score: " + currentScore;
     }
@@ -58,6 +60,24 @@ public class GameManager : MonoBehaviour
         currentMultiplier = 1;
         multiplierTracker = 0;
         multiText.text = "Multiplier: x" + currentMultiplier;
+    }
+
+    public void NormalHit()
+    {
+        currentScore += scorePerNote * currentMultiplier;
+        NoteHit();
+    }
+
+    public void GoodHit()
+    {
+        currentScore += scorePerGoodNote * currentMultiplier;
+        NoteHit();
+    }
+
+    public void PerfectHit()
+    {
+        currentScore += scorePerPerfectNote * currentMultiplier;
+        NoteHit();
     }
 
 }
