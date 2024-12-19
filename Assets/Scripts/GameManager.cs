@@ -12,10 +12,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<MinigameData> availableMinigames;
     [SerializeField] private int numberOfMinigamesToPlay = 3;
 
-    // Game progress
-    private List<MinigameData> selectedMinigames;
-    private int currentMinigameIndex = 0;
-    protected MinigameData currentMinigameData;
 
     private void Awake()
     {
@@ -23,7 +19,6 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            selectedMinigames = new List<MinigameData>();
             LoadMinigameData();
         }
         else
@@ -50,16 +45,20 @@ public class GameManager : MonoBehaviour
 
     public void StartNewGame()
     {
-        selectedMinigames.Clear();
-        currentMinigameIndex = 0;
+        // Create MatchManager
+        GameObject matchObj = new GameObject("MatchManager");
+        matchObj.AddComponent<MatchManager>();
 
-        SelectRandomMinigames();
-        LoadNextMinigame();
+        List<MinigameData> selectedMinigames;
+        selectedMinigames = SelectRandomMinigames();
+
+        MatchManager.Instance.InitializeMatch(selectedMinigames);
     }
 
-    private void SelectRandomMinigames()
+    private List<MinigameData> SelectRandomMinigames()
     {
         List<MinigameData> tempList = new List<MinigameData>(availableMinigames);
+        List<MinigameData> selectedMinigames = new List<MinigameData>();
 
         for (int i = 0; i < numberOfMinigamesToPlay && tempList.Count > 0; i++)
         {
@@ -69,26 +68,16 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log($"Selected {selectedMinigames.Count} minigames for this session");
+        return selectedMinigames;
     }
 
-    public void LoadNextMinigame()
+    public void LoadMinigame(string minigameName, string minigameSceneName)
     {
-        if (currentMinigameIndex < selectedMinigames.Count)
-        {
-            currentMinigameData = selectedMinigames[currentMinigameIndex];
-
-            string nextScene = selectedMinigames[currentMinigameIndex].sceneName;
-            SceneManager.LoadScene(nextScene);
-            Debug.Log($"Loading minigame: {selectedMinigames[currentMinigameIndex].minigameName}");
-            currentMinigameIndex++;
-        }
-        else
-        {
-            LoadResults();
-        }
+        SceneManager.LoadScene(minigameSceneName);
+        Debug.Log($"Loading minigame: {minigameName}");
     }
 
-    private void LoadResults()
+    public void LoadResults()
     {
         // SceneManager.LoadScene("Results");
         // Debug.Log("All minigames completed, loading results");
@@ -101,11 +90,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenuScene");
         Debug.Log("Returning to main menu");
-    }
-
-    public MinigameData GetCurrentMinigameData()
-    {
-        return currentMinigameData;
+        Destroy(MatchManager.Instance);
     }
 
     public List<MinigameData> GetAvailableMinigames()
@@ -115,8 +100,12 @@ public class GameManager : MonoBehaviour
 
     public void PlaySpecificMinigame(MinigameData minigame)
     {
-        currentMinigameData = minigame;
-        SceneManager.LoadScene(minigame.sceneName);
+        // Create MatchManager
+        GameObject matchObj = new GameObject("MatchManager");
+        matchObj.AddComponent<MatchManager>();
+
+        List<MinigameData> minigameList = new List<MinigameData>() { minigame };
+        MatchManager.Instance.InitializeMatch(minigameList);
         Debug.Log($"Debug Mode: Loading specific minigame: {minigame.minigameName}");
     }
 
