@@ -2,23 +2,34 @@ using UnityEngine;
 
 public class BeatScroller : MonoBehaviour
 {
-
+    [Header("Scroll Settings")]
     public float beatTempo;
-    public bool hasStarted;
+    public bool hasStarted;  // Removido HideInInspector para debug
+
+    private float scrollSpeed;
 
     void Start()
     {
-        beatTempo = beatTempo / 60f;
-        
+        scrollSpeed = beatTempo / 60f;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (hasStarted)
+        if (!hasStarted)
         {
-            transform.position -= new Vector3(0f, beatTempo * Time.deltaTime, 0f);
+            return;
         }
         
+        foreach (Transform child in transform)
+        {
+            Vector3 movement = new Vector3(0f, -scrollSpeed * Time.deltaTime, 0f);
+            child.position += movement;
+        }
+    }
+
+    public void SetTempo(float newTempo)
+    {
+        beatTempo = newTempo;
+        scrollSpeed = beatTempo / 60f;
     }
 }

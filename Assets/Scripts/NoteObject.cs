@@ -2,49 +2,79 @@ using UnityEngine;
 
 public class NoteObject : MonoBehaviour
 {
-    [SerializeField] private bool canBePressed;
-    [SerializeField] private KeyCode keyToPress;
-    [SerializeField] private GameObject hitEffect, goodEffect, perfectEffect, missEffect;
+    [Header("Visual Effects")]
+    [SerializeField] private GameObject hitEffect;
+    [SerializeField] private GameObject goodEffect;
+    [SerializeField] private GameObject perfectEffect;
+    [SerializeField] private GameObject missEffect;
 
-    void Start()
+    private KeyCode keyToPress;
+    private bool canBePressed;
+    private bool wasPressed;
+    private float distanceFromCenter;
+
+    public void SetupNote(KeyCode key)
     {
-        
+        keyToPress = key;
+        ResetNote();
     }
 
     void Update()
     {
+        if (!canBePressed || wasPressed) return;
+
         if (Input.GetKeyDown(keyToPress))
         {
-            if (canBePressed)
-            {
-                gameObject.SetActive(false);
-                GameManager.instance.NoteHit();
-
-                if (Mathf.Abs(transform.position.y) > 0.25)
-                {
-                    Debug.Log("Normal Hit");
-                    GameManager.instance.NormalHit();
-                    Instantiate(hitEffect, transform.position, hitEffect.transform.rotation);
-                }
-                else if (Mathf.Abs(transform.position.y) > 0.05f)
-                {
-                    Debug.Log("Good Hit");
-                    GameManager.instance.GoodHit();
-                    Instantiate(goodEffect, transform.position, goodEffect.transform.rotation);
-                }
-                else
-                {
-                    Debug.Log("Perfect Hit");
-                    GameManager.instance.PerfectHit();
-                    Instantiate(perfectEffect, transform.position, perfectEffect.transform.rotation);
-                }
-            }
+            wasPressed = true;
+            HandleNotePress();
         }
+    }
+
+    private void HandleNotePress()
+    {
+        distanceFromCenter = Mathf.Abs(transform.position.y);
+        HitAccuracy accuracy = Conductor.instance.GetNoteAccuracy(distanceFromCenter);
+        
+        GameObject effectToSpawn = null;
+        
+        switch (accuracy)
+        {
+            case HitAccuracy.Perfect:
+                GameManager.instance.PerfectHit();
+                effectToSpawn = perfectEffect;
+                break;
+            case HitAccuracy.Good:
+                GameManager.instance.GoodHit();
+                effectToSpawn = goodEffect;
+                break;
+            case HitAccuracy.Normal:
+                GameManager.instance.NormalHit();
+                effectToSpawn = hitEffect;
+                break;
+            default:
+                GameManager.instance.NoteMissed();
+                effectToSpawn = missEffect;
+                break;
+        }
+
+        if (effectToSpawn)
+        {
+            SpawnEffect(effectToSpawn);
+        }
+
+        gameObject.SetActive(false);
+    }
+
+    private void SpawnEffect(GameObject effectPrefab)
+    {
+        Vector3 spawnPosition = transform.position;
+        Quaternion spawnRotation = effectPrefab.transform.rotation;
+        Instantiate(effectPrefab, spawnPosition, spawnRotation);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Activator")
+        if (other.CompareTag("Activator"))
         {
             canBePressed = true;
         }
@@ -52,11 +82,17 @@ public class NoteObject : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if ( gameObject.activeSelf && other.tag == "Activator")
+        if (!wasPressed && other.CompareTag("Activator") && gameObject.activeSelf)
         {
             canBePressed = false;
             GameManager.instance.NoteMissed();
-            Instantiate(missEffect, transform.position, missEffect.transform.rotation);
+            SpawnEffect(missEffect);
         }
+    }
+
+    public void ResetNote()
+    {
+        canBePressed = false;
+        wasPressed = false;
     }
 }
