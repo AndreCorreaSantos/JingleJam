@@ -4,7 +4,7 @@ public class BeatScroller : MonoBehaviour
 {
     [Header("Scroll Settings")]
     public float beatTempo;
-    public bool hasStarted;  // Removido HideInInspector para debug
+    public bool hasStarted; 
 
     private float scrollSpeed;
 

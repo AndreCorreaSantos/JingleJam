@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: 0";
         currentMultiplier = 1;
         multiplierTracker = 0;
-        totalNotes = 0; // Começa em 0 pois as notas serão spawnadas
+        totalNotes = 0;
         isSongEnded = false;
         UpdateMultiplierText();
     }
@@ -91,16 +91,13 @@ public class GameManager : MonoBehaviour
             isSongEnded = true;
             songEndTime = Time.time;
             
-            // Desativa o RhythmSpawner quando a música acabar
-            RhythmSpawner spawner = FindObjectOfType<RhythmSpawner>();
+            RhythmSpawner spawner = FindFirstObjectByType<RhythmSpawner>();
             if (spawner != null)
             {
                 spawner.enabled = false;
             }
         }
 
-        // Espera um tempo após a música acabar para mostrar os resultados
-        // Isso dá tempo para as últimas notas serem processadas
         if (isSongEnded && Time.time >= songEndTime + delayAfterSongEnd && !resultsScreen.activeInHierarchy)
         {
             ShowResults();
@@ -142,13 +139,11 @@ public class GameManager : MonoBehaviour
         rankText.text = rankVal;
     }
 
-    // Chamado pelo RhythmSpawner quando uma nota é criada
     public void NoteSpawned()
     {
         totalNotes++;
     }
 
-    // Resto dos métodos permanecem iguais...
     public void NoteHit()
     {
         UpdateMultiplier();

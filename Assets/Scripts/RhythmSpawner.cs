@@ -6,7 +6,7 @@ public class RhythmSpawner : MonoBehaviour
     [SerializeField] private LaneConfig[] lanes;
     
     [Header("References")]
-    [SerializeField] private BeatScroller beatScroller; // Referência ao BeatScroller
+    [SerializeField] private BeatScroller beatScroller; 
     
     [Header("Pattern Settings")]
     [SerializeField] private float baseSpawnChance = 0.7f;
@@ -92,7 +92,6 @@ public class RhythmSpawner : MonoBehaviour
             noteObj.SetupNote(lane.keyToPress);
         }
 
-        // Notifica o GameManager sobre a nova nota
         GameManager.instance.NoteSpawned();
     }
 }
