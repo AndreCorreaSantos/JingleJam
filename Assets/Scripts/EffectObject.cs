@@ -6,12 +6,11 @@ public class EffectObject : MonoBehaviour
     [SerializeField] private float lifeTime = 1f;
     void Start()
     {
-        
+        Destroy(gameObject, lifeTime);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Destroy(gameObject, lifeTime);
+
     }
 }

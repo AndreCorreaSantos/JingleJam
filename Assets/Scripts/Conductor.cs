@@ -16,8 +16,7 @@ public class Conductor : MonoBehaviour
 
     [Header("Accuracy Settings")]
     public float perfectThreshold = 0.03f;    // ±30ms
-    public float goodThreshold = 0.06f;       // ±60ms
-    public float normalThreshold = 0.1f;      // ±100ms
+    public float earlyLateThreshold = 0.06f;  // ±60ms
 
     [Header("Audio Analysis")]
     public float currentBeatVolume { get; private set; }
@@ -76,25 +75,25 @@ public class Conductor : MonoBehaviour
             currentBeatVolume /= 8;
         }
     }
-
     public HitAccuracy GetNoteAccuracy(float notePosition)
     {
-        float distanceFromCenter = Mathf.Abs(notePosition);
+        float distanceFromCenter = notePosition; 
         
-        if (distanceFromCenter <= perfectThreshold)
+        if (Mathf.Abs(distanceFromCenter) <= perfectThreshold)
             return HitAccuracy.Perfect;
-        if (distanceFromCenter <= goodThreshold)
-            return HitAccuracy.Good;
-        if (distanceFromCenter <= normalThreshold)
-            return HitAccuracy.Normal;
+        
+        if (Mathf.Abs(distanceFromCenter) <= earlyLateThreshold)
+        {
+            return distanceFromCenter < 0 ? HitAccuracy.Late : HitAccuracy.Early;
+        }
             
         return HitAccuracy.Miss;
     }
 }
 public enum HitAccuracy
 {
+    Miss,
+    Early,
     Perfect,
-    Good,
-    Normal,
-    Miss
+    Late
 }

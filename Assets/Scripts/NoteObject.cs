@@ -3,9 +3,9 @@ using UnityEngine;
 public class NoteObject : MonoBehaviour
 {
     [Header("Visual Effects")]
-    [SerializeField] private GameObject hitEffect;
-    [SerializeField] private GameObject goodEffect;
+    [SerializeField] private GameObject earlyEffect;
     [SerializeField] private GameObject perfectEffect;
+    [SerializeField] private GameObject lateEffect;
     [SerializeField] private GameObject missEffect;
 
     private KeyCode keyToPress;
@@ -32,7 +32,8 @@ public class NoteObject : MonoBehaviour
 
     private void HandleNotePress()
     {
-        distanceFromCenter = Mathf.Abs(transform.position.y);
+        // We now use the actual position value, not absolute, to determine Early/Late
+        distanceFromCenter = transform.position.y;
         HitAccuracy accuracy = Conductor.instance.GetNoteAccuracy(distanceFromCenter);
         
         GameObject effectToSpawn = null;
@@ -43,13 +44,13 @@ public class NoteObject : MonoBehaviour
                 MinigameManager.instance.PerfectHit();
                 effectToSpawn = perfectEffect;
                 break;
-            case HitAccuracy.Good:
-                MinigameManager.instance.GoodHit();
-                effectToSpawn = goodEffect;
+            case HitAccuracy.Early:
+                MinigameManager.instance.EarlyHit();
+                effectToSpawn = earlyEffect;
                 break;
-            case HitAccuracy.Normal:
-                MinigameManager.instance.NormalHit();
-                effectToSpawn = hitEffect;
+            case HitAccuracy.Late:
+                MinigameManager.instance.LateHit();
+                effectToSpawn = lateEffect;
                 break;
             default:
                 MinigameManager.instance.NoteMissed();

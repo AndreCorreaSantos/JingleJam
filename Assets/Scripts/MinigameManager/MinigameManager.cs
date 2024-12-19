@@ -24,34 +24,31 @@ public abstract class MinigameManager : MonoBehaviour
 
     [Header("Rhythm Game Settings")]
     [SerializeField] private bool startPlaying;
-    [SerializeField] private int[] multiplierThresholds;
     [SerializeField] private float delayAfterSongEnd = 2f;
 
     [Header("Scoring")]
-    public int scorePerNote = 100;
-    public int scorePerGoodNote = 125;
-    public int scorePerPerfectNote = 150;
+    public int scorePerEarlyLateNote = 50;
+    public int scorePerPerfectNote = 100;
     
     [Header("UI References")]
     [SerializeField] protected Text scoreText;
     [SerializeField] protected Text multiText;
     [SerializeField] protected GameObject resultsScreen;
     [SerializeField] protected Text percentHitText;
-    [SerializeField] protected Text normalsText;
-    [SerializeField] protected Text goodsText;
+    [SerializeField] protected Text earlysText;
     [SerializeField] protected Text perfectsText;
+    [SerializeField] protected Text latesText;
     [SerializeField] protected Text missesText;
     [SerializeField] protected Text rankText;
     [SerializeField] protected Text finalScoreText;
 
     // Rhythm game specific variables
     protected int currentScore;
-    protected int currentMultiplier = 1;
-    protected int multiplierTracker;
+    protected float currentMultiplier = 1f;
     protected int totalNotes;
-    protected int normalHits;
-    protected int goodHits;
+    protected int earlyHits;
     protected int perfectHits;
+    protected int lateHits;
     protected int missedHits;
     protected float songEndTime;
     protected bool isSongEnded;
@@ -110,9 +107,13 @@ public abstract class MinigameManager : MonoBehaviour
     protected virtual void InitializeGame()
     {
         scoreText.text = "Score: 0";
-        currentMultiplier = 1;
-        multiplierTracker = 0;
+        currentMultiplier = 1f;
+        currentScore = 0;
         totalNotes = 0;
+        earlyHits = 0;
+        perfectHits = 0;
+        lateHits = 0;
+        missedHits = 0;
         isSongEnded = false;
         UpdateMultiplierText();
     }
@@ -160,6 +161,7 @@ public abstract class MinigameManager : MonoBehaviour
             CompleteMinigame();
         }
     }
+
     protected virtual void ShowResults()
     {
         resultsScreen.SetActive(true);
@@ -169,12 +171,12 @@ public abstract class MinigameManager : MonoBehaviour
 
     protected virtual void UpdateResultsUI()
     {
-        normalsText.text = normalHits.ToString();
-        goodsText.text = goodHits.ToString();
+        earlysText.text = earlyHits.ToString();
         perfectsText.text = perfectHits.ToString();
+        latesText.text = lateHits.ToString();
         missesText.text = missedHits.ToString();
         
-        int totalHit = normalHits + goodHits + perfectHits;
+        int totalHit = earlyHits + perfectHits + lateHits;
         float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
         percentHitText.text = percentHit.ToString("F1") + "%";
         finalScoreText.text = currentScore.ToString();
@@ -182,15 +184,16 @@ public abstract class MinigameManager : MonoBehaviour
 
     protected virtual void CalculateAndShowRank()
     {
-        int totalHit = normalHits + goodHits + perfectHits;
+        int totalHit = earlyHits + perfectHits + lateHits;
         float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
+        float perfectPercent = totalNotes > 0 ? (float)perfectHits / totalNotes * 100f : 0f;
         
         string rankVal = "F";
-        if (percentHit > 95) rankVal = "S";
-        else if (percentHit > 85) rankVal = "A";
-        else if (percentHit > 70) rankVal = "B";
-        else if (percentHit > 55) rankVal = "C";
-        else if (percentHit > 40) rankVal = "D";
+        if (percentHit > 95 && perfectPercent > 80) rankVal = "S";
+        else if (percentHit > 90 && perfectPercent > 60) rankVal = "A";
+        else if (percentHit > 80) rankVal = "B";
+        else if (percentHit > 70) rankVal = "C";
+        else if (percentHit > 60) rankVal = "D";
         
         rankText.text = rankVal;
     }
@@ -203,21 +206,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void NoteHit()
     {
-        UpdateMultiplier();
         UpdateUI();
-    }
-
-    protected virtual void UpdateMultiplier()
-    {
-        if (currentMultiplier - 1 < multiplierThresholds.Length)
-        {
-            multiplierTracker++;
-            if (multiplierTracker >= multiplierThresholds[currentMultiplier - 1])
-            {
-                multiplierTracker = 0;
-                currentMultiplier++;
-            }
-        }
     }
 
     protected virtual void UpdateUI()
@@ -228,35 +217,36 @@ public abstract class MinigameManager : MonoBehaviour
 
     protected virtual void UpdateMultiplierText()
     {
-        multiText.text = "Multiplier: x" + currentMultiplier;
+        multiText.text = $"Multiplier: x{currentMultiplier:F1}";
     }
 
     public virtual void NoteMissed()
     {
-        currentMultiplier = 1;
-        multiplierTracker = 0;
+        currentMultiplier = 1f;
         UpdateMultiplierText();
         missedHits++;
+        UpdateUI();
     }
 
-    public virtual void NormalHit()
+    public virtual void EarlyHit()
     {
-        currentScore += scorePerNote * currentMultiplier;
+        currentScore += (int)(scorePerEarlyLateNote * currentMultiplier);
+        earlyHits++;
         NoteHit();
-        normalHits++;
-    }
-
-    public virtual void GoodHit()
-    {
-        currentScore += scorePerGoodNote * currentMultiplier;
-        NoteHit();
-        goodHits++;
     }
 
     public virtual void PerfectHit()
     {
-        currentScore += scorePerPerfectNote * currentMultiplier;
-        NoteHit();
+        currentScore += (int)(scorePerPerfectNote * currentMultiplier);
+        currentMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
         perfectHits++;
+        NoteHit();
+    }
+
+    public virtual void LateHit()
+    {
+        currentScore += (int)(scorePerEarlyLateNote * currentMultiplier);
+        lateHits++;
+        NoteHit();
     }
 }
