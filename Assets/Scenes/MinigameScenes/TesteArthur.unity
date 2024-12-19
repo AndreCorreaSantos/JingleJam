@@ -700,9 +700,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songBpm: 126.4
   firstBeatOffset: 0
-  perfectThreshold: 0.05
-  goodThreshold: 0.1
-  normalThreshold: 1
+  perfectThreshold: 0.1
+  earlyLateThreshold: 1
   musicSource: {fileID: 515992357}
   beatScroller: {fileID: 57456678}
 --- !u!4 &330624210
@@ -1552,18 +1551,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPlaying: 0
-  multiplierThresholds: 04000000080000001000000020000000
   delayAfterSongEnd: 5
-  scorePerNote: 100
-  scorePerGoodNote: 125
+  scorePerEarlyLateNote: 50
   scorePerPerfectNote: 150
   scoreText: {fileID: 1791990394}
   multiText: {fileID: 2046179001}
   resultsScreen: {fileID: 766832845}
   percentHitText: {fileID: 1903861623}
-  normalsText: {fileID: 1991264647}
-  goodsText: {fileID: 1982387921}
+  earlysText: {fileID: 1991264647}
   perfectsText: {fileID: 723331160}
+  latesText: {fileID: 1982387921}
   missesText: {fileID: 325538177}
   rankText: {fileID: 1294892955}
   finalScoreText: {fileID: 745663033}
@@ -1959,7 +1956,7 @@ GameObject:
   - component: {fileID: 875399377}
   - component: {fileID: 875399376}
   m_Layer: 5
-  m_Name: Good Hits
+  m_Name: Late Hits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2017,7 +2014,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Good Notes Hit
+  m_Text: Late Notes Hit
 --- !u!222 &875399377
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2038,7 +2035,7 @@ GameObject:
   - component: {fileID: 1160336786}
   - component: {fileID: 1160336785}
   m_Layer: 5
-  m_Name: Normal Hits
+  m_Name: Early Hits
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2096,7 +2093,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Normal Notes Hit
+  m_Text: Early Notes Hit
 --- !u!222 &1160336786
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3253,7 +3250,7 @@ GameObject:
   - component: {fileID: 1982387922}
   - component: {fileID: 1982387921}
   m_Layer: 5
-  m_Name: Good Hits Value
+  m_Name: Late Hits Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3332,7 +3329,7 @@ GameObject:
   - component: {fileID: 1991264648}
   - component: {fileID: 1991264647}
   m_Layer: 5
-  m_Name: Normal Hits Value
+  m_Name: Early Hits Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
