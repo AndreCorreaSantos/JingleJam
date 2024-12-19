@@ -84,13 +84,15 @@ public class RhythmSpawner : MonoBehaviour
     private void SpawnNote(int laneIndex)
     {
         LaneConfig lane = lanes[laneIndex];
-        // Instancia a nota como filha do BeatScroller
         GameObject note = Instantiate(lane.notePrefab, lane.spawnPoint.position, Quaternion.identity, beatScroller.transform);
-        
+            
         NoteObject noteObj = note.GetComponent<NoteObject>();
         if (noteObj != null)
         {
             noteObj.SetupNote(lane.keyToPress);
         }
+
+        // Notifica o GameManager sobre a nova nota
+        GameManager.instance.NoteSpawned();
     }
 }

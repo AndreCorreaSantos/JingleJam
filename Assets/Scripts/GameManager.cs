@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     [SerializeField] private bool startPlaying;
     [SerializeField] private int[] multiplierThresholds;
+    [SerializeField] private float delayAfterSongEnd = 2f; 
 
     [Header("Scoring")]
     public int scorePerNote = 100;
@@ -34,6 +35,8 @@ public class GameManager : MonoBehaviour
     private int goodHits;
     private int perfectHits;
     private int missedHits;
+    private float songEndTime;
+    private bool isSongEnded;
 
     void Awake()
     {
@@ -55,7 +58,8 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: 0";
         currentMultiplier = 1;
         multiplierTracker = 0;
-        totalNotes = FindObjectsByType<NoteObject>(FindObjectsSortMode.None).Length;
+        totalNotes = 0; // Começa em 0 pois as notas serão spawnadas
+        isSongEnded = false;
         UpdateMultiplierText();
     }
 
@@ -82,7 +86,22 @@ public class GameManager : MonoBehaviour
 
     private void CheckGameEnd()
     {
-        if (!Conductor.instance.musicSource.isPlaying && !resultsScreen.activeInHierarchy)
+        if (!isSongEnded && !Conductor.instance.musicSource.isPlaying)
+        {
+            isSongEnded = true;
+            songEndTime = Time.time;
+            
+            // Desativa o RhythmSpawner quando a música acabar
+            RhythmSpawner spawner = FindObjectOfType<RhythmSpawner>();
+            if (spawner != null)
+            {
+                spawner.enabled = false;
+            }
+        }
+
+        // Espera um tempo após a música acabar para mostrar os resultados
+        // Isso dá tempo para as últimas notas serem processadas
+        if (isSongEnded && Time.time >= songEndTime + delayAfterSongEnd && !resultsScreen.activeInHierarchy)
         {
             ShowResults();
         }
@@ -103,7 +122,7 @@ public class GameManager : MonoBehaviour
         missesText.text = missedHits.ToString();
         
         int totalHit = normalHits + goodHits + perfectHits;
-        float percentHit = (float)totalHit / totalNotes * 100f;
+        float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
         percentHitText.text = percentHit.ToString("F1") + "%";
         finalScoreText.text = currentScore.ToString();
     }
@@ -111,7 +130,7 @@ public class GameManager : MonoBehaviour
     private void CalculateAndShowRank()
     {
         int totalHit = normalHits + goodHits + perfectHits;
-        float percentHit = (float)totalHit / totalNotes * 100f;
+        float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
         
         string rankVal = "F";
         if (percentHit > 95) rankVal = "S";
@@ -123,6 +142,13 @@ public class GameManager : MonoBehaviour
         rankText.text = rankVal;
     }
 
+    // Chamado pelo RhythmSpawner quando uma nota é criada
+    public void NoteSpawned()
+    {
+        totalNotes++;
+    }
+
+    // Resto dos métodos permanecem iguais...
     public void NoteHit()
     {
         UpdateMultiplier();

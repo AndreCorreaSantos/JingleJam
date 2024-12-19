@@ -1382,9 +1382,9 @@ MonoBehaviour:
   beatScroller: {fileID: 57456678}
   baseSpawnChance: 1
   minNoteInterval: 3
-  offbeatChance: 0
-  volumeThreshold: 0.2
-  maxSpawnChance: 0.9
+  offbeatChance: 0.3
+  volumeThreshold: 0.15
+  maxSpawnChance: 1
   minSpawnChance: 0.4
 --- !u!1 &646905164
 GameObject:
@@ -1417,6 +1417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPlaying: 0
   multiplierThresholds: 040000000800000010000000
+  delayAfterSongEnd: 5
   scorePerNote: 100
   scorePerGoodNote: 125
   scorePerPerfectNote: 150
