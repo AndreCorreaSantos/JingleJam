@@ -92,6 +92,6 @@ public class RhythmSpawner : MonoBehaviour
             noteObj.SetupNote(lane.keyToPress);
         }
 
-        GameManager.instance.NoteSpawned();
+        MinigameManager.instance.NoteSpawned();
     }
 }

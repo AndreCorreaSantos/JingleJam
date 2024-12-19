@@ -40,19 +40,19 @@ public class NoteObject : MonoBehaviour
         switch (accuracy)
         {
             case HitAccuracy.Perfect:
-                GameManager.instance.PerfectHit();
+                MinigameManager.instance.PerfectHit();
                 effectToSpawn = perfectEffect;
                 break;
             case HitAccuracy.Good:
-                GameManager.instance.GoodHit();
+                MinigameManager.instance.GoodHit();
                 effectToSpawn = goodEffect;
                 break;
             case HitAccuracy.Normal:
-                GameManager.instance.NormalHit();
+                MinigameManager.instance.NormalHit();
                 effectToSpawn = hitEffect;
                 break;
             default:
-                GameManager.instance.NoteMissed();
+                MinigameManager.instance.NoteMissed();
                 effectToSpawn = missEffect;
                 break;
         }
@@ -85,7 +85,7 @@ public class NoteObject : MonoBehaviour
         if (!wasPressed && other.CompareTag("Activator") && gameObject.activeSelf)
         {
             canBePressed = false;
-            GameManager.instance.NoteMissed();
+            MinigameManager.instance.NoteMissed();
             SpawnEffect(missEffect);
         }
     }
