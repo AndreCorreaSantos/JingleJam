@@ -29,7 +29,7 @@ public abstract class MinigameManager : MonoBehaviour
     [Header("Scoring")]
     public int scorePerEarlyLateNote = 50;
     public int scorePerPerfectNote = 100;
-    
+
     [Header("UI References")]
     [SerializeField] protected Text scoreText;
     [SerializeField] protected Text multiText;
@@ -65,12 +65,12 @@ public abstract class MinigameManager : MonoBehaviour
 
     protected virtual void Start()
     {
-        minigameData = GameManager.Instance.GetCurrentMinigameData();
-        if (minigameData == null)
-        {
-            Debug.LogError("No minigame data found!");
-            return;
-        }
+        // minigameData = GameManager.Instance.GetCurrentMinigameData();
+        // if (minigameData == null)
+        // {
+        //     Debug.LogError("No minigame data found!");
+        //     return;
+        // }
         PrepareMinigame();
     }
 
@@ -92,16 +92,16 @@ public abstract class MinigameManager : MonoBehaviour
 
         currentState = MinigameState.Completed;
         OnMinigameCompleted?.Invoke();
-        
+
         ShowResults();
-        
+
         // Delay the loading of next minigame
         Invoke("LoadNextMinigame", delayAfterSongEnd);
     }
 
     protected virtual void LoadNextMinigame()
     {
-        GameManager.Instance.LoadNextMinigame();
+        MatchManager.Instance.NextMinigame();
     }
 
     protected virtual void InitializeGame()
@@ -148,14 +148,14 @@ public abstract class MinigameManager : MonoBehaviour
         {
             isSongEnded = true;
             songEndTime = Time.time;
-            
+
             RhythmSpawner spawner = FindFirstObjectByType<RhythmSpawner>();
             if (spawner != null)
             {
                 spawner.enabled = false;
             }
         }
-        
+
         if (isSongEnded && Time.time >= songEndTime + delayAfterSongEnd)
         {
             CompleteMinigame();
@@ -175,7 +175,7 @@ public abstract class MinigameManager : MonoBehaviour
         perfectsText.text = perfectHits.ToString();
         latesText.text = lateHits.ToString();
         missesText.text = missedHits.ToString();
-        
+
         int totalHit = earlyHits + perfectHits + lateHits;
         float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
         percentHitText.text = percentHit.ToString("F1") + "%";
@@ -187,14 +187,14 @@ public abstract class MinigameManager : MonoBehaviour
         int totalHit = earlyHits + perfectHits + lateHits;
         float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
         float perfectPercent = totalNotes > 0 ? (float)perfectHits / totalNotes * 100f : 0f;
-        
+
         string rankVal = "F";
         if (percentHit > 95 && perfectPercent > 80) rankVal = "S";
         else if (percentHit > 90 && perfectPercent > 60) rankVal = "A";
         else if (percentHit > 80) rankVal = "B";
         else if (percentHit > 70) rankVal = "C";
         else if (percentHit > 60) rankVal = "D";
-        
+
         rankText.text = rankVal;
     }
 
