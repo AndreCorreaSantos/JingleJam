@@ -58,34 +58,6 @@ public class MatchManager : MonoBehaviour
         }
     }
 
-    public void RecordMinigameScore(string minigameName, float score)
-    {
-        minigameScores[minigameName] = score;
-        totalScore += score;
-
-        // Update best score
-        if (score > bestScore)
-        {
-            bestScore = score;
-            bestMinigame = minigameName;
-        }
-
-        // Update average
-        averageScore = totalScore / minigameScores.Count;
-
-        Debug.Log($"Recorded score for {minigameName}: {score}");
-    }
-
-    public Dictionary<string, float> GetMatchResults()
-    {
-        return new Dictionary<string, float>
-        {
-            { "totalScore", totalScore },
-            { "bestScore", bestScore },
-            { "averageScore", averageScore }
-        };
-    }
-
     private void OnDestroy()
     {
         Instance = null;
