@@ -11,11 +11,14 @@ public class NoteObject : MonoBehaviour
     private KeyCode keyToPress;
     private bool canBePressed;
     private bool wasPressed;
-    private float distanceFromCenter;
+    private Vector3 targetPosition;
+    private Vector3 moveDirection;
 
-    public void SetupNote(KeyCode key)
+    public void SetupNote(KeyCode key, Vector3 target)
     {
         keyToPress = key;
+        targetPosition = target;
+        moveDirection = (targetPosition - transform.position).normalized;
         ResetNote();
     }
 
@@ -32,10 +35,20 @@ public class NoteObject : MonoBehaviour
 
     private void HandleNotePress()
     {
-        // We now use the actual position value, not absolute, to determine Early/Late
-        distanceFromCenter = transform.position.y;
-        HitAccuracy accuracy = Conductor.instance.GetNoteAccuracy(distanceFromCenter);
+        Vector3 toTarget = targetPosition - transform.position;
+        float distanceFromCenter = toTarget.magnitude;
+
+        // Determina se está Early ou Late baseado na direção do movimento
+        // Se o produto escalar é positivo, significa que ainda não chegou no alvo (Early)
+        bool isBeforeTarget = Vector3.Dot(toTarget.normalized, moveDirection) > 0;
         
+        // Inverte o sinal da distância se estiver antes do alvo
+        if (isBeforeTarget)
+        {
+            distanceFromCenter = -distanceFromCenter;
+        }
+
+        HitAccuracy accuracy = Conductor.instance.GetNoteAccuracy(distanceFromCenter);
         GameObject effectToSpawn = null;
         
         switch (accuracy)
@@ -68,9 +81,7 @@ public class NoteObject : MonoBehaviour
 
     private void SpawnEffect(GameObject effectPrefab)
     {
-        Vector3 spawnPosition = transform.position;
-        Quaternion spawnRotation = effectPrefab.transform.rotation;
-        Instantiate(effectPrefab, spawnPosition, spawnRotation);
+        Instantiate(effectPrefab, transform.position, Quaternion.identity);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -88,6 +99,7 @@ public class NoteObject : MonoBehaviour
             canBePressed = false;
             MinigameManager.instance.NoteMissed();
             SpawnEffect(missEffect);
+            gameObject.SetActive(false);
         }
     }
 

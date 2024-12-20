@@ -4,25 +4,24 @@ public class BeatScroller : MonoBehaviour
 {
     [Header("Scroll Settings")]
     public float beatTempo;
-    public bool hasStarted; 
+    public bool hasStarted;
+    public Vector3 scrollDirection = Vector3.down;
 
     private float scrollSpeed;
 
     void Start()
     {
         scrollSpeed = beatTempo / 60f;
+        scrollDirection = scrollDirection.normalized;
     }
 
     void Update()
     {
-        if (!hasStarted)
-        {
-            return;
-        }
+        if (!hasStarted) return;
         
         foreach (Transform child in transform)
         {
-            Vector3 movement = new Vector3(0f, -scrollSpeed * Time.deltaTime, 0f);
+            Vector3 movement = scrollDirection * scrollSpeed * Time.deltaTime;
             child.position += movement;
         }
     }

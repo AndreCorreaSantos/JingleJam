@@ -84,7 +84,7 @@ public class Conductor : MonoBehaviour
         
         if (Mathf.Abs(distanceFromCenter) <= earlyLateThreshold)
         {
-            return distanceFromCenter < 0 ? HitAccuracy.Late : HitAccuracy.Early;
+            return distanceFromCenter < 0 ? HitAccuracy.Early : HitAccuracy.Late;
         }
             
         return HitAccuracy.Miss;

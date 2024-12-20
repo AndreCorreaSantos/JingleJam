@@ -34,6 +34,12 @@ public class RhythmSpawner : MonoBehaviour
             enabled = false;
             return;
         }
+
+        if (lanes.Length > 0 && lanes[0].spawnPoint != null && lanes[0].targetPoint != null)
+        {
+            Vector3 direction = (lanes[0].targetPoint.position - lanes[0].spawnPoint.position).normalized;
+            beatScroller.scrollDirection = direction;
+        }
         
         lastSpawnedBeatPerLane = new float[lanes.Length];
         for (int i = 0; i < lastSpawnedBeatPerLane.Length; i++)
@@ -89,7 +95,7 @@ public class RhythmSpawner : MonoBehaviour
         NoteObject noteObj = note.GetComponent<NoteObject>();
         if (noteObj != null)
         {
-            noteObj.SetupNote(lane.keyToPress);
+            noteObj.SetupNote(lane.keyToPress, lane.targetPoint.position);
         }
 
         MinigameManager.instance.NoteSpawned();
