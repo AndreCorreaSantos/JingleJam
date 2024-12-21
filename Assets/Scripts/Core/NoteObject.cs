@@ -3,16 +3,17 @@ using UnityEngine;
 public class NoteObject : MonoBehaviour
 {
     [Header("Visual Effects")]
-    [SerializeField] private GameObject earlyEffect;
-    [SerializeField] private GameObject perfectEffect;
-    [SerializeField] private GameObject lateEffect;
-    [SerializeField] private GameObject missEffect;
+    [SerializeField] protected GameObject earlyEffect; 
+    [SerializeField] protected GameObject perfectEffect;
+    [SerializeField] protected GameObject lateEffect;
+    [SerializeField] protected GameObject missEffect;
 
-    private KeyCode keyToPress;
-    private bool canBePressed;
-    private bool wasPressed;
-    private Vector3 targetPosition;
-    private Vector3 moveDirection;
+    protected KeyCode keyToPress;
+    protected bool canBePressed;
+    protected bool wasPressed;
+    protected Vector3 targetPosition;
+    protected Vector3 moveDirection;
+    protected HitAccuracy lastHitAccuracy;
 
     public void SetupNote(KeyCode key, Vector3 target)
     {
@@ -38,20 +39,17 @@ public class NoteObject : MonoBehaviour
         Vector3 toTarget = targetPosition - transform.position;
         float distanceFromCenter = toTarget.magnitude;
 
-        // Determina se está Early ou Late baseado na direção do movimento
-        // Se o produto escalar é positivo, significa que ainda não chegou no alvo (Early)
         bool isBeforeTarget = Vector3.Dot(toTarget.normalized, moveDirection) > 0;
         
-        // Inverte o sinal da distância se estiver antes do alvo
         if (isBeforeTarget)
         {
             distanceFromCenter = -distanceFromCenter;
         }
 
-        HitAccuracy accuracy = Conductor.instance.GetNoteAccuracy(distanceFromCenter);
+        lastHitAccuracy = Conductor.instance.GetNoteAccuracy(distanceFromCenter);
         GameObject effectToSpawn = null;
         
-        switch (accuracy)
+        switch (lastHitAccuracy)
         {
             case HitAccuracy.Perfect:
                 MinigameManager.instance.PerfectHit();
@@ -76,14 +74,19 @@ public class NoteObject : MonoBehaviour
             SpawnEffect(effectToSpawn);
         }
 
+        OnNoteProcessed();
+    }
+
+    protected virtual void OnNoteProcessed()
+    {
         gameObject.SetActive(false);
     }
 
-    private void SpawnEffect(GameObject effectPrefab)
+    protected virtual void SpawnEffect(GameObject effectPrefab)
     {
-        Instantiate(effectPrefab, transform.position, Quaternion.identity);
+        Instantiate(effectPrefab, transform.position, Quaternion.LookRotation(Camera.main.transform.forward));
     }
-
+    
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Activator"))
