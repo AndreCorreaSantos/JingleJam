@@ -107,7 +107,7 @@ public abstract class MinigameManager : MonoBehaviour
     protected virtual void InitializeGame()
     {
         scoreText.text = "Score: 0";
-        currentMultiplier = 1f;
+        UpdateMultiplier(MatchManager.Instance.GetCurrentMultiplier());
         currentScore = 0;
         totalNotes = 0;
         earlyHits = 0;
@@ -169,6 +169,13 @@ public abstract class MinigameManager : MonoBehaviour
         CalculateAndShowRank();
     }
 
+    protected virtual void UpdateMultiplier(float newMultiplier)
+    {
+        currentMultiplier = newMultiplier;
+        MatchManager.Instance.SetCurrentMultiplier(currentMultiplier);
+        UpdateMultiplierText();
+    }
+
     protected virtual void UpdateResultsUI()
     {
         earlysText.text = earlyHits.ToString();
@@ -222,8 +229,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void NoteMissed()
     {
-        currentMultiplier = 1f;
-        UpdateMultiplierText();
+        UpdateMultiplier(1f);
         missedHits++;
         UpdateUI();
     }
@@ -238,7 +244,8 @@ public abstract class MinigameManager : MonoBehaviour
     public virtual void PerfectHit()
     {
         currentScore += (int)(scorePerPerfectNote * currentMultiplier);
-        currentMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
+        float newMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
+        UpdateMultiplier(newMultiplier);
         perfectHits++;
         NoteHit();
     }

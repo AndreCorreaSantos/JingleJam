@@ -10,11 +10,14 @@ public class MatchManager : MonoBehaviour
     private Dictionary<string, float> minigameScores;
     private int currentMinigameIndex;
 
+    // Match scores
+    private float currentMultiplier;
+
     // Match statistics
-    private float totalScore;
-    private float bestScore;
-    private string bestMinigame;
-    private float averageScore;
+    // private float totalScore;
+    // private float bestScore;
+    // private string bestMinigame;
+    // private float averageScore;
 
     private void Awake()
     {
@@ -36,8 +39,8 @@ public class MatchManager : MonoBehaviour
         matchMinigames = new List<MinigameData>(selectedMinigames);
         minigameScores = new Dictionary<string, float>();
         currentMinigameIndex = 0;
-        totalScore = 0;
-        bestScore = 0;
+        // totalScore = 0;
+        // bestScore = 0;
         Debug.Log($"Match initialized with {matchMinigames.Count} minigames");
 
         GameManager.Instance.LoadMinigame(selectedMinigames[currentMinigameIndex].minigameName, selectedMinigames[currentMinigameIndex].sceneName);
@@ -56,6 +59,16 @@ public class MatchManager : MonoBehaviour
         {
             GameManager.Instance.LoadResults(); // Game Ended
         }
+    }
+
+    public float GetCurrentMultiplier()
+    {
+        return currentMultiplier;
+    }
+
+    public void SetCurrentMultiplier(float newMultiplier)
+    {
+        currentMultiplier = newMultiplier;
     }
 
     private void OnDestroy()
