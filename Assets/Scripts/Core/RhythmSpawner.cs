@@ -6,22 +6,29 @@ public class RhythmSpawner : MonoBehaviour
     [SerializeField] private LaneConfig[] lanes;
     
     [Header("References")]
-    [SerializeField] private BeatScroller beatScroller; 
+    [SerializeField] private BeatScroller beatScroller;
     
     [Header("Pattern Settings")]
     [SerializeField] private float baseSpawnChance = 0.7f;
-    [SerializeField] private float minNoteInterval = 1f;
+    [SerializeField] private float minNoteInterval = 0.5f;
     [Range(0f, 1f)]
-    [SerializeField] private float offbeatChance = 0.3f;
+    [SerializeField] private float offbeatChance = 0.5f;
+
+    [Header("Burst Settings")]
+    [SerializeField] private float burstChance = 0.2f;
+    [SerializeField] private int maxBurstNotes = 3;
+    [SerializeField] private float burstNoteInterval = 0.25f;
     
     [Header("Dynamic Difficulty")]
-    [SerializeField] private float volumeThreshold = 0.1f;
+    [SerializeField] private float volumeThreshold = 0.05f;
     [SerializeField] private float maxSpawnChance = 0.9f;
     [SerializeField] private float minSpawnChance = 0.5f;
     
     private float nextPossibleSpawnBeat;
     private float[] lastSpawnedBeatPerLane;
     private System.Random random;
+    private bool inBurst;
+    private int burstNotesLeft;
 
     void Start()
     {
@@ -57,7 +64,7 @@ public class RhythmSpawner : MonoBehaviour
         {
             float volumeFactor = Mathf.Clamp01(currentVolume / volumeThreshold);
             baseSpawnChance = Mathf.Lerp(minSpawnChance, maxSpawnChance, volumeFactor);
-            minNoteInterval = Mathf.Lerp(1f, 0.5f, volumeFactor);
+            minNoteInterval = Mathf.Lerp(0.5f, 0.25f, volumeFactor);
         }
 
         float currentBeat = Conductor.instance.songPositionInBeats;
@@ -65,11 +72,36 @@ public class RhythmSpawner : MonoBehaviour
         if (currentBeat < nextPossibleSpawnBeat) return;
 
         float beatDecimal = currentBeat - Mathf.Floor(currentBeat);
-        bool isOnBeat = beatDecimal < 0.1f || beatDecimal > 0.9f;
-        bool isOffBeat = Mathf.Abs(beatDecimal - 0.5f) < 0.1f;
+        bool isOnBeat = beatDecimal < 0.05f || beatDecimal > 0.95f;
+        bool isOffBeat = Mathf.Abs(beatDecimal - 0.5f) < 0.05f;
 
-        if ((isOnBeat && ShouldSpawnNote(baseSpawnChance)) || 
-            (isOffBeat && ShouldSpawnNote(offbeatChance)))
+        if (!inBurst && isOnBeat && random.NextDouble() < burstChance)
+        {
+            inBurst = true;
+            burstNotesLeft = random.Next(2, maxBurstNotes + 1);
+        }
+
+        if (inBurst)
+        {
+            if (burstNotesLeft > 0)
+            {
+                int laneIndex = random.Next(lanes.Length);
+                if (currentBeat - lastSpawnedBeatPerLane[laneIndex] >= burstNoteInterval)
+                {
+                    SpawnNote(laneIndex);
+                    burstNotesLeft--;
+                    lastSpawnedBeatPerLane[laneIndex] = currentBeat;
+                    nextPossibleSpawnBeat = currentBeat + burstNoteInterval;
+                }
+            }
+            else
+            {
+                inBurst = false;
+                nextPossibleSpawnBeat = currentBeat + minNoteInterval;
+            }
+        }
+        else if ((isOnBeat && ShouldSpawnNote(baseSpawnChance)) || 
+                 (isOffBeat && ShouldSpawnNote(offbeatChance)))
         {
             int laneIndex = random.Next(lanes.Length);
             
@@ -77,7 +109,7 @@ public class RhythmSpawner : MonoBehaviour
             {
                 SpawnNote(laneIndex);
                 lastSpawnedBeatPerLane[laneIndex] = currentBeat;
-                nextPossibleSpawnBeat = currentBeat + (minNoteInterval * 0.5f);
+                nextPossibleSpawnBeat = currentBeat + (minNoteInterval * 0.25f);
             }
         }
     }
