@@ -44,7 +44,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     // Rhythm game specific variables
     protected int currentScore;
-    protected float currentMultiplier = 1f;
+    protected float currentMultiplier;
     protected int totalNotes;
     protected int earlyHits;
     protected int perfectHits;

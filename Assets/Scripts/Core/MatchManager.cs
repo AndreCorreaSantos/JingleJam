@@ -39,6 +39,7 @@ public class MatchManager : MonoBehaviour
         matchMinigames = new List<MinigameData>(selectedMinigames);
         minigameScores = new Dictionary<string, float>();
         currentMinigameIndex = 0;
+        currentMultiplier = 1;
         // totalScore = 0;
         // bestScore = 0;
         Debug.Log($"Match initialized with {matchMinigames.Count} minigames");
