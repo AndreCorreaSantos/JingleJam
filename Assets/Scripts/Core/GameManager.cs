@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     public void StartNewGame()
     {
+        Debug.Log($"Starting New Game");
         // Create MatchManager
         GameObject matchObj = new GameObject("MatchManager");
         matchObj.AddComponent<MatchManager>();
