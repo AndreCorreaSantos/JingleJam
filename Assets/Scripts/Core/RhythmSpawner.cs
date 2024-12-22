@@ -123,9 +123,9 @@ public class RhythmSpawner : MonoBehaviour
     {
         LaneConfig lane = lanes[laneIndex];
         GameObject note = Instantiate(lane.notePrefab, lane.spawnPoint.position, Quaternion.identity, beatScroller.transform);
-            
-        NoteObject noteObj = note.GetComponent<NoteObject>();
-        if (noteObj != null)
+                
+        NoteObject[] noteObjects = note.GetComponentsInChildren<NoteObject>();
+        foreach (NoteObject noteObj in noteObjects)
         {
             noteObj.SetupNote(lane.keyToPress, lane.targetPoint.position);
         }
