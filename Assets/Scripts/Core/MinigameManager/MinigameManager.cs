@@ -71,8 +71,12 @@ public abstract class MinigameManager : MonoBehaviour
         //     Debug.LogError("No minigame data found!");
         //     return;
         // }
+        MatchManager.Instance.OnMultiplierChanged += HandleMultiplierChanged;
+        MatchManager.Instance.SetMinigameManager(this);
         PrepareMinigame();
     }
+
+
 
     protected virtual void PrepareMinigame()
     {
@@ -107,7 +111,7 @@ public abstract class MinigameManager : MonoBehaviour
     protected virtual void InitializeGame()
     {
         scoreText.text = "Score: 0";
-        UpdateMultiplier(MatchManager.Instance.GetCurrentMultiplier());
+        MatchManager.Instance.SetCurrentMultiplier(1f);
         currentScore = 0;
         totalNotes = 0;
         earlyHits = 0;
@@ -169,10 +173,9 @@ public abstract class MinigameManager : MonoBehaviour
         CalculateAndShowRank();
     }
 
-    protected virtual void UpdateMultiplier(float newMultiplier)
+    private void HandleMultiplierChanged(float newMultiplier)
     {
         currentMultiplier = newMultiplier;
-        MatchManager.Instance.SetCurrentMultiplier(currentMultiplier);
         UpdateMultiplierText();
     }
 
@@ -229,7 +232,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void NoteMissed()
     {
-        UpdateMultiplier(1f);
+        MatchManager.Instance.SetCurrentMultiplier(1f);
         missedHits++;
         UpdateUI();
     }
@@ -245,7 +248,7 @@ public abstract class MinigameManager : MonoBehaviour
     {
         currentScore += (int)(scorePerPerfectNote * currentMultiplier);
         float newMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
-        UpdateMultiplier(newMultiplier);
+        MatchManager.Instance.SetCurrentMultiplier(newMultiplier);
         perfectHits++;
         NoteHit();
     }
@@ -255,5 +258,10 @@ public abstract class MinigameManager : MonoBehaviour
         currentScore += (int)(scorePerEarlyLateNote * currentMultiplier);
         lateHits++;
         NoteHit();
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 }
