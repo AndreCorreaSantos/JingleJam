@@ -111,7 +111,7 @@ public abstract class MinigameManager : MonoBehaviour
     protected virtual void InitializeGame()
     {
         scoreText.text = "Score: 0";
-        MatchManager.Instance.SetCurrentMultiplier(1f);
+        currentMultiplier = MatchManager.Instance.GetCurrentMultiplier();
         currentScore = 0;
         totalNotes = 0;
         earlyHits = 0;
@@ -262,6 +262,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        MatchManager.Instance.OnMultiplierChanged -= HandleMultiplierChanged;
         instance = null;
     }
 }

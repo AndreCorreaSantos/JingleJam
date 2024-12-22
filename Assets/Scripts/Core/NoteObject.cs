@@ -3,7 +3,7 @@ using UnityEngine;
 public class NoteObject : MonoBehaviour
 {
     [Header("Visual Effects")]
-    [SerializeField] protected GameObject earlyEffect; 
+    [SerializeField] protected GameObject earlyEffect;
     [SerializeField] protected GameObject perfectEffect;
     [SerializeField] protected GameObject lateEffect;
     [SerializeField] protected GameObject missEffect;
@@ -40,7 +40,7 @@ public class NoteObject : MonoBehaviour
         float distanceFromCenter = toTarget.magnitude;
 
         bool isBeforeTarget = Vector3.Dot(toTarget.normalized, moveDirection) > 0;
-        
+
         if (isBeforeTarget)
         {
             distanceFromCenter = -distanceFromCenter;
@@ -48,7 +48,7 @@ public class NoteObject : MonoBehaviour
 
         lastHitAccuracy = Conductor.instance.GetNoteAccuracy(distanceFromCenter);
         GameObject effectToSpawn = null;
-        
+
         switch (lastHitAccuracy)
         {
             case HitAccuracy.Perfect:
@@ -86,7 +86,7 @@ public class NoteObject : MonoBehaviour
     {
         Instantiate(effectPrefab, transform.position, Quaternion.LookRotation(Camera.main.transform.forward));
     }
-    
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Activator"))
@@ -100,7 +100,10 @@ public class NoteObject : MonoBehaviour
         if (!wasPressed && other.CompareTag("Activator") && gameObject.activeSelf)
         {
             canBePressed = false;
-            MinigameManager.instance.NoteMissed();
+            if (MinigameManager.instance != null)
+            {
+                MinigameManager.instance.NoteMissed();
+            }
             SpawnEffect(missEffect);
             gameObject.SetActive(false);
         }
