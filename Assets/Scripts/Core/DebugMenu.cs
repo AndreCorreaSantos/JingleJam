@@ -2,8 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DebugMinigameMenu : MonoBehaviour
+public class DebugMenu : MonoBehaviour
 {
+    public static DebugMenu Instance { get; private set; }
+
     [SerializeField] private Toggle debugToggle;
     [SerializeField] private GameObject debugContent;
 
@@ -15,6 +17,18 @@ public class DebugMinigameMenu : MonoBehaviour
     [SerializeField] private Button nextMinigameButton;
     [SerializeField] private Button increaseMultiplierButton;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -47,8 +61,6 @@ public class DebugMinigameMenu : MonoBehaviour
         playSelectedButton.onClick.AddListener(PlaySelectedMinigame);
         nextMinigameButton.onClick.AddListener(NextMinigame);
         increaseMultiplierButton.onClick.AddListener(IncreaseMultiplier);
-
-        DontDestroyOnLoad(gameObject.transform.parent);
     }
 
     private void PlaySelectedMinigame()
