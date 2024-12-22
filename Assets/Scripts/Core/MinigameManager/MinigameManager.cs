@@ -44,7 +44,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     // Rhythm game specific variables
     protected int currentScore;
-    protected float currentMultiplier = 1f;
+    protected float currentMultiplier;
     protected int totalNotes;
     protected int earlyHits;
     protected int perfectHits;
@@ -71,8 +71,12 @@ public abstract class MinigameManager : MonoBehaviour
         //     Debug.LogError("No minigame data found!");
         //     return;
         // }
+        MatchManager.Instance.OnMultiplierChanged += HandleMultiplierChanged;
+        MatchManager.Instance.SetMinigameManager(this);
         PrepareMinigame();
     }
+
+
 
     protected virtual void PrepareMinigame()
     {
@@ -107,7 +111,7 @@ public abstract class MinigameManager : MonoBehaviour
     protected virtual void InitializeGame()
     {
         scoreText.text = "Score: 0";
-        currentMultiplier = 1f;
+        MatchManager.Instance.SetCurrentMultiplier(1f);
         currentScore = 0;
         totalNotes = 0;
         earlyHits = 0;
@@ -169,6 +173,12 @@ public abstract class MinigameManager : MonoBehaviour
         CalculateAndShowRank();
     }
 
+    private void HandleMultiplierChanged(float newMultiplier)
+    {
+        currentMultiplier = newMultiplier;
+        UpdateMultiplierText();
+    }
+
     protected virtual void UpdateResultsUI()
     {
         earlysText.text = earlyHits.ToString();
@@ -222,8 +232,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void NoteMissed()
     {
-        currentMultiplier = 1f;
-        UpdateMultiplierText();
+        MatchManager.Instance.SetCurrentMultiplier(1f);
         missedHits++;
         UpdateUI();
     }
@@ -238,7 +247,8 @@ public abstract class MinigameManager : MonoBehaviour
     public virtual void PerfectHit()
     {
         currentScore += (int)(scorePerPerfectNote * currentMultiplier);
-        currentMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
+        float newMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
+        MatchManager.Instance.SetCurrentMultiplier(newMultiplier);
         perfectHits++;
         NoteHit();
     }
@@ -248,5 +258,10 @@ public abstract class MinigameManager : MonoBehaviour
         currentScore += (int)(scorePerEarlyLateNote * currentMultiplier);
         lateHits++;
         NoteHit();
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class MatchManager : MonoBehaviour
 {
@@ -10,11 +11,11 @@ public class MatchManager : MonoBehaviour
     private Dictionary<string, float> minigameScores;
     private int currentMinigameIndex;
 
-    // Match statistics
-    private float totalScore;
-    private float bestScore;
-    private string bestMinigame;
-    private float averageScore;
+    // Match scores
+    private float currentMultiplier;
+    public event Action<float> OnMultiplierChanged;
+
+    private MinigameManager minigameManager;
 
     private void Awake()
     {
@@ -36,8 +37,7 @@ public class MatchManager : MonoBehaviour
         matchMinigames = new List<MinigameData>(selectedMinigames);
         minigameScores = new Dictionary<string, float>();
         currentMinigameIndex = 0;
-        totalScore = 0;
-        bestScore = 0;
+        currentMultiplier = 1;
         Debug.Log($"Match initialized with {matchMinigames.Count} minigames");
 
         GameManager.Instance.LoadMinigame(selectedMinigames[currentMinigameIndex].minigameName, selectedMinigames[currentMinigameIndex].sceneName);
@@ -47,6 +47,7 @@ public class MatchManager : MonoBehaviour
     public void NextMinigame()
     {
         Debug.Log($"Current Minigame Index: {currentMinigameIndex} | Match Count: {matchMinigames.Count}");
+        Destroy(minigameManager);
         if (currentMinigameIndex < matchMinigames.Count)
         {
             GameManager.Instance.LoadMinigame(matchMinigames[currentMinigameIndex].minigameName, matchMinigames[currentMinigameIndex].sceneName);
@@ -56,6 +57,25 @@ public class MatchManager : MonoBehaviour
         {
             GameManager.Instance.LoadResults(); // Game Ended
         }
+    }
+
+    public float GetCurrentMultiplier()
+    {
+        return currentMultiplier;
+    }
+
+    public void SetCurrentMultiplier(float newMultiplier)
+    {
+        if (currentMultiplier != newMultiplier)
+        {
+            currentMultiplier = newMultiplier;
+            OnMultiplierChanged?.Invoke(currentMultiplier);
+        }
+    }
+
+    public void SetMinigameManager(MinigameManager newMinigameManager)
+    {
+        minigameManager = newMinigameManager;
     }
 
     private void OnDestroy()
