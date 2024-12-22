@@ -2,18 +2,39 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DebugMinigameMenu : MonoBehaviour
+public class DebugMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject debugPanel;
+    public static DebugMenu Instance { get; private set; }
+
+    [SerializeField] private Toggle debugToggle;
+    [SerializeField] private GameObject debugContent;
+
+    // Play selected Minigame
     [SerializeField] private TMP_Dropdown minigameDropdown;
     [SerializeField] private Button playSelectedButton;
-    [SerializeField] private Toggle debugToggle;
+
+    // Minigame actions
+    [SerializeField] private Button nextMinigameButton;
+    [SerializeField] private Button increaseMultiplierButton;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
         SetupDebugMenu();
 
-        debugPanel.SetActive(false);
+        debugContent.SetActive(false);
 
         if (debugToggle != null)
         {
@@ -23,7 +44,7 @@ public class DebugMinigameMenu : MonoBehaviour
 
     private void OnDebugToggleChanged(bool isOn)
     {
-        debugPanel.SetActive(isOn);
+        debugContent.SetActive(isOn);
     }
 
     private void SetupDebugMenu()
@@ -38,6 +59,8 @@ public class DebugMinigameMenu : MonoBehaviour
 
         minigameDropdown.RefreshShownValue();
         playSelectedButton.onClick.AddListener(PlaySelectedMinigame);
+        nextMinigameButton.onClick.AddListener(NextMinigame);
+        increaseMultiplierButton.onClick.AddListener(IncreaseMultiplier);
     }
 
     private void PlaySelectedMinigame()
@@ -46,6 +69,23 @@ public class DebugMinigameMenu : MonoBehaviour
         if (minigameDropdown.value < minigames.Count)
         {
             GameManager.Instance.PlaySpecificMinigame(minigames[minigameDropdown.value]);
+        }
+    }
+
+    private void NextMinigame()
+    {
+        if (MatchManager.Instance != null)
+        {
+            MatchManager.Instance.NextMinigame();
+        }
+    }
+
+    private void IncreaseMultiplier()
+    {
+        if (MatchManager.Instance != null)
+        {
+            float currentMultiplier = MatchManager.Instance.GetCurrentMultiplier();
+            MatchManager.Instance.SetCurrentMultiplier(Mathf.Min(currentMultiplier + .5f, 4f));
         }
     }
 }
