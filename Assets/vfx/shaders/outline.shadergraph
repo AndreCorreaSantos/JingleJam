@@ -1305,7 +1305,7 @@
     "m_ObjectId": "48a0d27c00624701bd8ca3252d81d9f2",
     "m_Title": "Fade outline",
     "m_Position": {
-        "x": -34.0,
+        "x": -34.22222900390625,
         "y": 220.0
     }
 }
@@ -2545,7 +2545,7 @@
     "m_ObjectId": "d860501f98d04a56aa85b3fc5c7e0d3d",
     "m_Title": "Mesh Inflation",
     "m_Position": {
-        "x": -684.0,
+        "x": -683.9999389648438,
         "y": -1152.0
     }
 }
