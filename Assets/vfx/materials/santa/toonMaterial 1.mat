@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: outlineMaterial 1
-  m_Shader: {fileID: -6465566751694194690, guid: 8a7e1de18af2a8e4d80bb2b63400358d, type: 3}
-  m_Parent: {fileID: 2100000, guid: f04eb3b18a5a93143a44135daac74c3a, type: 2}
+  m_Name: toonMaterial 1
+  m_Shader: {fileID: -6465566751694194690, guid: bace8ea08e027c84086ff2e011413214, type: 3}
+  m_Parent: {fileID: 2100000, guid: 090f54227eccea84f9d07fce1e5e1e63, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -23,14 +23,17 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _Texture:
+        m_Texture: {fileID: 2800000, guid: 4268d3d929f2d7246811d4e53fa2d927, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats:
-    - _OutlineThickness: 0.00246
+    m_Floats: []
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &5084671383012164904
+--- !u!114 &6248803522848399294
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
