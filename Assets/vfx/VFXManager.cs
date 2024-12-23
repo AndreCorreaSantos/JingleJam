@@ -21,24 +21,18 @@ public class VFXManager : MonoBehaviour
         dissolveEffect.SetMesh("ObjectMesh", tMesh);
         dissolveEffect.enabled = false;
     }
-
-    void Update()
+    public void playEffect()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(dissolve());
-        }
+        StartCoroutine(dissolve());
     }
-    
     private IEnumerator dissolve()
     {
         //set the dissolve effect to active
         gameObject.GetComponent<MeshRenderer>().enabled = false;
         dissolveEffect.enabled = true;
         yield return new WaitForSeconds(1.0f);
-
+        // destroy the object
+        Destroy(gameObject);
+        
     }
-
-
-
 }
