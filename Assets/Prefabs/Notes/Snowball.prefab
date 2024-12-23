@@ -156,7 +156,8 @@ MonoBehaviour:
   lateEffect: {fileID: 34353326011284255, guid: ea19161ec545f3846878685898edf5a6, type: 3}
   missEffect: {fileID: 34353326011284255, guid: ea59871e207dea04a8f358c04203748c, type: 3}
   snowballTrail: {fileID: 9151092734188024528}
-  explosionEffect: {fileID: 0}
+  goodColor: {r: 1, g: 0.79393184, b: 0, a: 0}
+  badColor: {r: 0.5167715, g: 0.6820231, b: 1, a: 0}
   perfectHitForce: 100
   badHitForce: 30
   perfectUpwardAngle: 45

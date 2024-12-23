@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class NoteObject : MonoBehaviour
 {
@@ -84,7 +85,15 @@ public class NoteObject : MonoBehaviour
 
     protected virtual void SpawnEffect(GameObject effectPrefab)
     {
+        Debug.Log("porra");
         Instantiate(effectPrefab, transform.position, Quaternion.LookRotation(Camera.main.transform.forward));
+    }
+
+    private IEnumerator playEffect(GameObject effectPrefab)
+    {
+        GameObject effect = Instantiate(effectPrefab, transform.position, Quaternion.LookRotation(Camera.main.transform.forward));
+        yield return new WaitForSeconds(1f);
+        Destroy(effect);
     }
 
     void OnTriggerEnter2D(Collider2D other)
