@@ -4638,6 +4638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1247742574}
   - component: {fileID: 1247742573}
+  - component: {fileID: 1247742575}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4675,6 +4676,49 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1247742575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247742572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a1901fece877764c8d4e744cce96327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: NoteMissed
+    clip: {fileID: 8300000, guid: 1fd36eb1eedc58c47859e2b9c489249a, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PerfectHit
+    clip: {fileID: 8300000, guid: 7d2468ce22ee9764390057578779da98, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Play
+    clip: {fileID: 8300000, guid: 02077302d2ece3d4c883efbcd86c2682, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MediumHit
+    clip: {fileID: 8300000, guid: b844752d4e49340489ca928f7a487090, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Hover
+    clip: {fileID: 8300000, guid: f1ad2e5a905af074ca1d1e0aa4796e51, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
 --- !u!1001 &1272094895
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -30,6 +30,9 @@ public abstract class MinigameManager : MonoBehaviour
     public int scorePerEarlyLateNote = 50;
     public int scorePerPerfectNote = 100;
 
+    [Header("Camera")]
+    [SerializeField] protected CameraShake cameraShake;
+
     [Header("UI References")]
     [SerializeField] protected Text scoreText;
     [SerializeField] protected Text multiText;
@@ -232,6 +235,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void NoteMissed()
     {
+        AudioManager.Instance.PlaySound("NoteMissed");
         MatchManager.Instance.SetCurrentMultiplier(1f);
         missedHits++;
         UpdateUI();
@@ -239,6 +243,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void EarlyHit()
     {
+        AudioManager.Instance.PlaySound("MediumHit");
         currentScore += (int)(scorePerEarlyLateNote * currentMultiplier);
         earlyHits++;
         NoteHit();
@@ -246,6 +251,8 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void PerfectHit()
     {
+        cameraShake.StartShake(0.25f, 0.05f);
+        AudioManager.Instance.PlaySound("PerfectHit");
         currentScore += (int)(scorePerPerfectNote * currentMultiplier);
         float newMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
         MatchManager.Instance.SetCurrentMultiplier(newMultiplier);
@@ -255,6 +262,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     public virtual void LateHit()
     {
+        AudioManager.Instance.PlaySound("MediumHit");
         currentScore += (int)(scorePerEarlyLateNote * currentMultiplier);
         lateHits++;
         NoteHit();
