@@ -33,6 +33,9 @@ public abstract class MinigameManager : MonoBehaviour
     [Header("Camera")]
     [SerializeField] protected CameraShake cameraShake;
 
+    [Header("TutorialPanel")]
+    [SerializeField] protected Animator tutorialAnimator;
+
     [Header("UI References")]
     [SerializeField] protected Text scoreText;
     [SerializeField] protected Text multiText;
@@ -90,6 +93,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     protected virtual void StartMinigame()
     {
+        tutorialAnimator.SetTrigger("Play");
         currentState = MinigameState.Playing;
     }
 
