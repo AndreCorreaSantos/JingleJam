@@ -34,7 +34,7 @@ public class NoteObject : MonoBehaviour
         }
     }
 
-    private void HandleNotePress()
+    protected virtual void HandleNotePress()
     {
         Vector3 toTarget = targetPosition - transform.position;
         float distanceFromCenter = toTarget.magnitude;
