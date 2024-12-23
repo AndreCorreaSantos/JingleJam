@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SnowballNote : NoteObject
 {
     [Header("Snowball Specific")]
     [SerializeField] private TrailRenderer snowballTrail;
-    [SerializeField] private ParticleSystem explosionEffect;
+    [SerializeField] private Dissolve dissolve;
     
     [Header("Physics Settings")]
     [SerializeField] private float perfectHitForce = 20f;
@@ -40,10 +41,9 @@ public class SnowballNote : NoteObject
 
     private void HandlePerfectHit()
     {
-        if (explosionEffect != null)
+        if (dissolve != null)
         {
-            explosionEffect.transform.parent = null;
-            explosionEffect.Play();
+            dissolve.playEffect();
         }
 
         rb.isKinematic = false;
