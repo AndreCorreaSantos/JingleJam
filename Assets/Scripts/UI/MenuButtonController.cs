@@ -49,6 +49,8 @@ public class MenuButtonController : MonoBehaviour, IPointerEnterHandler, IPointe
             currentAnimation.Kill();
         }
 
+        AudioManager.Instance.PlaySound("Hover");
+
         // Create a new animation sequence
         currentAnimation = DOTween.Sequence();
 

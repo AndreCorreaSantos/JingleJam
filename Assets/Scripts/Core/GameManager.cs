@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     public void StartNewGame()
     {
         Debug.Log($"Starting New Game");
+        AudioManager.Instance.PlaySound("Play");
         // Create MatchManager
         GameObject matchObj = new GameObject("MatchManager");
         matchObj.AddComponent<MatchManager>();
