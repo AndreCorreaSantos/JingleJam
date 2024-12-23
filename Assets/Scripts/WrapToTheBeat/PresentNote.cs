@@ -9,13 +9,10 @@ public class PresentNote : NoteObject
     
     protected override void OnNoteProcessed()
     {
-        // Desativa a caixa não embrulhada
-        if (unwrappedBox != null)
+        if (lastHitAccuracy != HitAccuracy.Miss && unwrappedBox != null)
         {
             unwrappedBox.SetActive(false);
         }
-        
-        // Ativa o presente apropriado baseado na precisão do hit
         switch (lastHitAccuracy)
         {
             case HitAccuracy.Perfect:
@@ -34,7 +31,6 @@ public class PresentNote : NoteObject
                 break;
                 
             default:
-                // No caso de miss, deixa a caixa não embrulhada
                 if (unwrappedBox != null)
                 {
                     unwrappedBox.SetActive(true);
@@ -59,7 +55,7 @@ public class PresentNote : NoteObject
         Instantiate(effectPrefab, effectPosition, Quaternion.LookRotation(Camera.main.transform.forward));
     }
 
-        private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Activator"))
         {
@@ -73,6 +69,8 @@ public class PresentNote : NoteObject
         {
             canBePressed = false;
             lastHitAccuracy = HitAccuracy.Miss;
+            MinigameManager.instance.NoteMissed();
+            SpawnEffect(missEffect);
             OnNoteProcessed();
         }
     }

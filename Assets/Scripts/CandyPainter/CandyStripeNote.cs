@@ -61,6 +61,7 @@ public class CandyStripeNote : NoteObject
         {
             canBePressed = false;
             MinigameManager.instance.NoteMissed();
+            SpawnEffect(missEffect);
             OnNoteProcessed();
         }
     }
