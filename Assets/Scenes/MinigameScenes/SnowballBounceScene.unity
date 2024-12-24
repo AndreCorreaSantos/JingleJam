@@ -2807,13 +2807,14 @@ MonoBehaviour:
   beatScroller: {fileID: 1284647346}
   baseSpawnChance: 0.75
   minNoteInterval: 3
-  offbeatChance: 0.5
+  offbeatChance: 0.6
   burstChance: 0.2
   maxBurstNotes: 3
   burstNoteInterval: 1
   volumeThreshold: 1
   maxSpawnChance: 1
   minSpawnChance: 0.4
+  stopSpawningBeforeEnd: 1
 --- !u!4 &620853003
 Transform:
   m_ObjectHideFlags: 0
@@ -3053,11 +3054,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2fbdaedc1d290745a103800cf8850bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPlaying: 0
   scorePerEarlyLateNote: 50
   scorePerPerfectNote: 100
   cameraShake: {fileID: 1664212331}
   tutorialAnimator: {fileID: 1642063742}
+  startDelay: 5
   scoreText: {fileID: 1519913272}
   scorePunchScript: {fileID: 1519913271}
   multiText: {fileID: 784468532}
@@ -8554,7 +8555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songBpm: 128
   firstBeatOffset: 0
-  perfectThreshold: 0.3
+  perfectThreshold: 0.4
   earlyLateThreshold: 1
   musicSource: {fileID: 1764692408}
   beatScroller: {fileID: 1284647346}
