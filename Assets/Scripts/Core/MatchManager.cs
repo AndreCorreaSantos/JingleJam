@@ -15,7 +15,9 @@ public class MatchManager : MonoBehaviour
     private float currentMultiplier;
     public event Action<float> OnMultiplierChanged;
 
-    private MinigameManager minigameManager;
+    public MinigameManager minigameManager;
+
+    private List<MinigameResults> minigameResults = new List<MinigameResults>();
 
     private void Awake()
     {
@@ -41,17 +43,16 @@ public class MatchManager : MonoBehaviour
         Debug.Log($"Match initialized with {matchMinigames.Count} minigames");
 
         GameManager.Instance.LoadMinigame(selectedMinigames[currentMinigameIndex].minigameName, selectedMinigames[currentMinigameIndex].sceneName);
-        currentMinigameIndex += 1;
     }
 
     public void NextMinigame()
     {
+        currentMinigameIndex += 1;
         Debug.Log($"Current Minigame Index: {currentMinigameIndex} | Match Count: {matchMinigames.Count}");
         Destroy(minigameManager);
         if (currentMinigameIndex < matchMinigames.Count)
         {
             GameManager.Instance.LoadMinigame(matchMinigames[currentMinigameIndex].minigameName, matchMinigames[currentMinigameIndex].sceneName);
-            currentMinigameIndex += 1;
         }
         else
         {
@@ -76,6 +77,24 @@ public class MatchManager : MonoBehaviour
     public void SetMinigameManager(MinigameManager newMinigameManager)
     {
         minigameManager = newMinigameManager;
+    }
+
+    // Add this method to store minigame results
+    public void StoreMinigameResults(MinigameResults results)
+    {
+        minigameResults.Add(results);
+        Debug.Log($"Stored results for {results.minigameName}: Score={results.score}, Rank={results.rank}");
+    }
+
+    // Add method to get all results
+    public List<MinigameResults> GetAllResults()
+    {
+        return minigameResults;
+    }
+
+    public MinigameData GetCurrentMinigameData()
+    {
+        return matchMinigames[currentMinigameIndex];
     }
 
     private void OnDestroy()
