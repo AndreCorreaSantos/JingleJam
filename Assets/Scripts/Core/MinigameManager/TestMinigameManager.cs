@@ -23,7 +23,7 @@ public class TestMinigameManager : MinigameManager
         Debug.Log("Minigame Started!");
     }
 
-    protected override void CompleteMinigame()
+    public override void CompleteMinigame()
     {
         base.CompleteMinigame();
         UpdateStateText();
