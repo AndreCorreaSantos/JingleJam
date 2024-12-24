@@ -1,10 +1,8 @@
 using System.Collections;
 using Unity.VisualScripting;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.VFX;
 
-[ExecuteInEditMode]
 public class Dissolve : MonoBehaviour
 {
     private Mesh tMesh;
