@@ -72,7 +72,7 @@ VisualEffect:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 0.5, y: 0.55057263, z: 1, w: 0}
+      - m_Value: {x: 0.9622642, y: 0, z: 0.06723385, w: 0}
         m_Name: Color
         m_Overridden: 1
     m_Uint:
@@ -133,7 +133,7 @@ VFXRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2073067281
-  m_SortingLayer: 1
+  m_SortingLayer: -1
   m_SortingOrder: 1
 --- !u!1 &2177641218267186495
 GameObject:
