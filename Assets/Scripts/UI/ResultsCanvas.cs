@@ -5,16 +5,23 @@ using TMPro;
 
 public class ResultsCanvas : MonoBehaviour
 {
-
     [Header("Results Display")]
-    [SerializeField] private GameObject resultStatsPrefab; // Prefab of the stats UI
-    [SerializeField] private Transform resultsContainer; // Parent transform to hold the stats
+    [SerializeField] private GameObject resultStatsPrefab;
+    [SerializeField] private Transform resultsContainer;
 
     [SerializeField] private TextMeshProUGUI totalAccuracyText;
     [SerializeField] private TextMeshProUGUI totalScoreText;
     [SerializeField] private TextMeshProUGUI maxMultiplierText;
 
+    [Header("Color Thresholds")]
+    [SerializeField] private float goodThreshold = 80f;    // Green threshold
+    [SerializeField] private float okayThreshold = 50f;    // Yellow threshold
+    // Below okayThreshold will be red
 
+    // Color definitions
+    private readonly Color goodColor = Color.green;
+    private readonly Color okayColor = Color.yellow;
+    private readonly Color badColor = Color.red;
 
     private void Start()
     {
@@ -33,12 +40,10 @@ public class ResultsCanvas : MonoBehaviour
     {
         List<MinigameResults> allResults = MatchManager.Instance.GetAllResults();
 
-        // Initialize totals
         int totalScore = 0;
         float totalAccuracy = 0;
         float maxMultiplier = 0;
 
-        // Clear any existing results first
         foreach (Transform child in resultsContainer)
         {
             Destroy(child.gameObject);
@@ -53,22 +58,22 @@ public class ResultsCanvas : MonoBehaviour
                 titleText: result.minigameName,
                 accuracyValue: $"{result.percentageHit:F1}%",
                 scoreValue: result.score.ToString("N0"),
-                rankValue: result.rank
+                rankValue: result.rank,
+                accuracyPercentage: result.percentageHit
             );
 
-            // Update totals
             totalScore += result.score;
             totalAccuracy += result.percentageHit;
             maxMultiplier = Mathf.Max(maxMultiplier, result.finalMultiplier);
         }
 
-        // Calculate average accuracy
         float averageAccuracy = allResults.Count > 0 ? totalAccuracy / allResults.Count : 0;
 
-        // Update UI texts
+        // Update UI texts with colors
         if (totalAccuracyText != null)
         {
             totalAccuracyText.text = $"{averageAccuracy:F1}%";
+            totalAccuracyText.color = GetColorForValue(averageAccuracy);
         }
 
         if (totalScoreText != null)
@@ -80,6 +85,15 @@ public class ResultsCanvas : MonoBehaviour
         {
             maxMultiplierText.text = $"x{maxMultiplier:F1}";
         }
+    }
 
+    private Color GetColorForValue(float value)
+    {
+        if (value >= goodThreshold)
+            return goodColor;
+        else if (value >= okayThreshold)
+            return okayColor;
+        else
+            return badColor;
     }
 }

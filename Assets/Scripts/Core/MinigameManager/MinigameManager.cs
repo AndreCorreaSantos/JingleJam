@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 [System.Serializable]
 public class MinigameResults
@@ -52,7 +53,8 @@ public abstract class MinigameManager : MonoBehaviour
     [SerializeField] protected Animator tutorialAnimator;
 
     [Header("UI References")]
-    [SerializeField] protected Text scoreText;
+    [SerializeField] protected TextMeshProUGUI scoreText;
+    [SerializeField] protected TextPunchAnimation scorePunchScript;
     [SerializeField] protected Text multiText;
     [SerializeField] protected GameObject resultsScreen;
     [SerializeField] protected Text percentHitText;
@@ -277,6 +279,7 @@ public abstract class MinigameManager : MonoBehaviour
     {
         cameraShake.StartShake(0.25f, 0.05f);
         AudioManager.Instance.PlaySound("PerfectHit");
+        scorePunchScript.PlayPunchAnimation();
         currentScore += (int)(scorePerPerfectNote * currentMultiplier);
         float newMultiplier = Mathf.Min(currentMultiplier + 0.1f, 4f);
         MatchManager.Instance.SetCurrentMultiplier(newMultiplier);
