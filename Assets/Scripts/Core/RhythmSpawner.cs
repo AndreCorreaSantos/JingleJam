@@ -24,6 +24,9 @@ public class RhythmSpawner : MonoBehaviour
     [SerializeField] private float maxSpawnChance = 0.9f;
     [SerializeField] private float minSpawnChance = 0.5f;
     
+    [Header("End Game Settings")]
+    [SerializeField] private float stopSpawningBeforeEnd = 1f;
+
     private float nextPossibleSpawnBeat;
     private float[] lastSpawnedBeatPerLane;
     private System.Random random;
@@ -58,6 +61,15 @@ public class RhythmSpawner : MonoBehaviour
     void Update()
     {
         if (!Conductor.instance.hasStarted) return;
+
+        if (Conductor.instance.musicSource != null)
+        {
+            float timeRemaining = Conductor.instance.musicSource.clip.length - Conductor.instance.musicSource.time;
+            if (timeRemaining <= stopSpawningBeforeEnd)
+            {
+                return;
+            }
+        }
 
         float currentVolume = Conductor.instance.currentBeatVolume;
         if (currentVolume > volumeThreshold)
@@ -128,8 +140,7 @@ public class RhythmSpawner : MonoBehaviour
         foreach (NoteObject noteObj in noteObjects)
         {
             noteObj.SetupNote(lane.keyToPress, lane.targetPoint.position);
+            MinigameManager.instance.NoteSpawned();
         }
-
-        MinigameManager.instance.NoteSpawned();
     }
 }

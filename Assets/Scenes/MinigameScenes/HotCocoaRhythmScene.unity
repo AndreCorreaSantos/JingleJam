@@ -2224,8 +2224,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 45b548a3a5dd16249a2c65bfd7b9bff4, type: 3}
-  m_Resource: {fileID: 8300000, guid: 45b548a3a5dd16249a2c65bfd7b9bff4, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9a5b64bfd576ae543ace56756e3f3401, type: 3}
+  m_Resource: {fileID: 8300000, guid: 9a5b64bfd576ae543ace56756e3f3401, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3254,11 +3254,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 761943283250f2f41bd272578615897f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPlaying: 0
   scorePerEarlyLateNote: 50
   scorePerPerfectNote: 100
   cameraShake: {fileID: 1963297177}
   tutorialAnimator: {fileID: 1918634702}
+  startDelay: 5
   scoreText: {fileID: 490150077}
   scorePunchScript: {fileID: 490150076}
   multiText: {fileID: 1923974244}
@@ -6628,36 +6628,13 @@ PrefabInstance:
     - target: {fileID: 4275722666029347038, guid: 56c34220d6ce9364288fed4cf1c5243e, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 5da99ce27433b0347831fb0d89273943, type: 2}
+      objectReference: {fileID: 9100000, guid: 632005caa4a503749902cd697eba3a5b, type: 2}
     m_RemovedComponents:
     - {fileID: -1163087553759945278, guid: 56c34220d6ce9364288fed4cf1c5243e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3056881721192401019, guid: 56c34220d6ce9364288fed4cf1c5243e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1992565866}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56c34220d6ce9364288fed4cf1c5243e, type: 3}
---- !u!1 &1992565865 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3056881721192401019, guid: 56c34220d6ce9364288fed4cf1c5243e, type: 3}
-  m_PrefabInstance: {fileID: 1992565864}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1992565866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992565865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9914cf37183e8bc4891985be600b3b03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  wrapDuration: 0.01
-  resetDelay: 0.1
 --- !u!1 &1996918733
 GameObject:
   m_ObjectHideFlags: 0
