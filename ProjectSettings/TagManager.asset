@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Effects
+    uniqueID: 2073067281
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
