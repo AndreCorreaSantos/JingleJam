@@ -39,7 +39,6 @@ public abstract class MinigameManager : MonoBehaviour
     public event Action OnMinigameCompleted;
 
     [Header("Rhythm Game Settings")]
-    [SerializeField] private bool startPlaying;
     private float delayAfterSongEnd = .5f;
 
     [Header("Scoring")]
@@ -51,6 +50,11 @@ public abstract class MinigameManager : MonoBehaviour
 
     [Header("TutorialPanel")]
     [SerializeField] protected Animator tutorialAnimator;
+    
+    [Header("Start Settings")]
+    [SerializeField] private float startDelay = 5f; 
+    private float startTimer;
+    private bool startPlaying;
 
     [Header("UI References")]
     [SerializeField] protected TextMeshProUGUI scoreText;
@@ -170,6 +174,8 @@ public abstract class MinigameManager : MonoBehaviour
         lateHits = 0;
         missedHits = 0;
         isSongEnded = false;
+        startTimer = startDelay;
+        startPlaying = false;
         UpdateMultiplierText();
     }
 
@@ -177,23 +183,19 @@ public abstract class MinigameManager : MonoBehaviour
     {
         if (!startPlaying)
         {
-            CheckGameStart();
+            startTimer -= Time.deltaTime;
+            if (startTimer <= 0)
+            {
+                startPlaying = true;
+                if (Conductor.instance != null)
+                {
+                    Conductor.instance.StartSong();
+                }
+            }
         }
         else
         {
             CheckGameEnd();
-        }
-    }
-
-    protected virtual void CheckGameStart()
-    {
-        if (Input.anyKeyDown)
-        {
-            startPlaying = true;
-            if (Conductor.instance != null)
-            {
-                Conductor.instance.StartSong();
-            }
         }
     }
 
