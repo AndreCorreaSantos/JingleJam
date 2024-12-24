@@ -1051,7 +1051,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 75.0,
+    "m_Value": 200.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
@@ -1305,8 +1305,8 @@
     "m_ObjectId": "48a0d27c00624701bd8ca3252d81d9f2",
     "m_Title": "Fade outline",
     "m_Position": {
-        "x": -34.22222900390625,
-        "y": 220.0
+        "x": -46.22216796875,
+        "y": 285.777587890625
     }
 }
 
@@ -1460,10 +1460,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -9.000028610229493,
-            "y": 279.0,
-            "width": 144.00010681152345,
-            "height": 33.999969482421878
+            "x": -20.888891220092775,
+            "y": 368.88885498046877,
+            "width": 144.0,
+            "height": 33.777740478515628
         }
     },
     "m_Slots": [
@@ -2545,8 +2545,8 @@
     "m_ObjectId": "d860501f98d04a56aa85b3fc5c7e0d3d",
     "m_Title": "Mesh Inflation",
     "m_Position": {
-        "x": -683.9999389648438,
-        "y": -1152.0
+        "x": -683.9998779296875,
+        "y": -1152.0001220703125
     }
 }
 

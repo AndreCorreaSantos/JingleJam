@@ -1,11 +1,14 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SnowballNote : NoteObject
 {
     [Header("Snowball Specific")]
     [SerializeField] private TrailRenderer snowballTrail;
-    [SerializeField] private ParticleSystem explosionEffect;
+    // [SerializeField] private VisualEffect effect;
+    [SerializeField] private Color goodColor;
+    [SerializeField] private Color badColor;
     
     [Header("Physics Settings")]
     [SerializeField] private float perfectHitForce = 20f;
@@ -40,11 +43,13 @@ public class SnowballNote : NoteObject
 
     private void HandlePerfectHit()
     {
-        if (explosionEffect != null)
-        {
-            explosionEffect.transform.parent = null;
-            explosionEffect.Play();
-        }
+        // if (effect != null)
+        // {
+        //     // set effect color to good color
+        //     effect.SetVector4("Color", goodColor);
+
+        //     effect.Play();
+        // }
 
         rb.isKinematic = false;
         rb.useGravity = true;
@@ -61,6 +66,7 @@ public class SnowballNote : NoteObject
 
     private void HandleBadHit(bool isLate)
     {
+
         rb.isKinematic = false;
         rb.useGravity = true;
         float randomAngle = isLate ? -badHitAngleRange : badHitAngleRange;
