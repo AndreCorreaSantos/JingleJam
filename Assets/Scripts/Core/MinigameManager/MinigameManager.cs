@@ -39,7 +39,7 @@ public abstract class MinigameManager : MonoBehaviour
     public event Action OnMinigameCompleted;
 
     [Header("Rhythm Game Settings")]
-    private float delayAfterSongEnd = .5f;
+    private float delayAfterSongEnd = 1.5f;
 
     [Header("Scoring")]
     public int scorePerEarlyLateNote = 50;
