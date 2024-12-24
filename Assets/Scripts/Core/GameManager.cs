@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +12,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string minigameDataPath = "MinigameData/Active";
     [SerializeField] private List<MinigameData> availableMinigames;
     [SerializeField] private int numberOfMinigamesToPlay = 3;
+
+    [SerializeField] private Animator transitionAnimator;
+    [SerializeField] private float transitionTime = 1f;
 
 
     private void Awake()
@@ -75,19 +79,19 @@ public class GameManager : MonoBehaviour
 
     public void LoadMinigame(string minigameName, string minigameSceneName)
     {
-        SceneManager.LoadScene(minigameSceneName);
+        StartCoroutine(LoadScene(minigameSceneName));
         Debug.Log($"Loading minigame: {minigameName}");
     }
 
     public void LoadResults()
     {
-        SceneManager.LoadScene("Results");
+        StartCoroutine(LoadScene("Results"));
         Debug.Log("All minigames completed, loading results");
     }
 
     public void ReturnToMainMenu()
     {
-        SceneManager.LoadScene("MainMenuScene");
+        StartCoroutine(LoadScene("MainMenuScene"));
         Debug.Log("Returning to main menu");
         Destroy(MatchManager.Instance);
     }
@@ -108,4 +112,12 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Debug Mode: Loading specific minigame: {minigame.minigameName}");
     }
 
+
+    private IEnumerator LoadScene(string name)
+    {
+        transitionAnimator.SetTrigger("Start");
+        yield return new WaitForSeconds(transitionTime);
+        SceneManager.LoadScene(name);
+        transitionAnimator.SetTrigger("End");
+    }
 }
