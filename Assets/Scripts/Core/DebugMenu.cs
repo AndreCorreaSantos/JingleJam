@@ -76,7 +76,7 @@ public class DebugMenu : MonoBehaviour
     {
         if (MatchManager.Instance != null)
         {
-            MatchManager.Instance.NextMinigame();
+            MatchManager.Instance.minigameManager.CompleteMinigame();
         }
     }
 

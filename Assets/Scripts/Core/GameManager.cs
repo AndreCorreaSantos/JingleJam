@@ -81,11 +81,8 @@ public class GameManager : MonoBehaviour
 
     public void LoadResults()
     {
-        // SceneManager.LoadScene("Results");
-        // Debug.Log("All minigames completed, loading results");
-
-        Debug.LogWarning("No Results Scene, loading Menu");
-        ReturnToMainMenu();
+        SceneManager.LoadScene("Results");
+        Debug.Log("All minigames completed, loading results");
     }
 
     public void ReturnToMainMenu()

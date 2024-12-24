@@ -2,6 +2,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+[System.Serializable]
+public class MinigameResults
+{
+    public string minigameName;
+    public int score;
+    public float percentageHit;
+    public int earlyHits;
+    public int perfectHits;
+    public int lateHits;
+    public int missedHits;
+    public string rank;
+    public float finalMultiplier;
+    public float maxMultiplier;
+}
+
 public abstract class MinigameManager : MonoBehaviour
 {
     public static MinigameManager instance;
@@ -24,7 +39,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     [Header("Rhythm Game Settings")]
     [SerializeField] private bool startPlaying;
-    [SerializeField] private float delayAfterSongEnd = 2f;
+    private float delayAfterSongEnd = .5f;
 
     [Header("Scoring")]
     public int scorePerEarlyLateNote = 50;
@@ -51,6 +66,7 @@ public abstract class MinigameManager : MonoBehaviour
     // Rhythm game specific variables
     protected int currentScore;
     protected float currentMultiplier;
+    protected float maxMultiplier;
     protected int totalNotes;
     protected int earlyHits;
     protected int perfectHits;
@@ -71,14 +87,9 @@ public abstract class MinigameManager : MonoBehaviour
 
     protected virtual void Start()
     {
-        // minigameData = GameManager.Instance.GetCurrentMinigameData();
-        // if (minigameData == null)
-        // {
-        //     Debug.LogError("No minigame data found!");
-        //     return;
-        // }
         MatchManager.Instance.OnMultiplierChanged += HandleMultiplierChanged;
         MatchManager.Instance.SetMinigameManager(this);
+        minigameData = MatchManager.Instance.GetCurrentMinigameData();
         PrepareMinigame();
     }
 
@@ -97,17 +108,48 @@ public abstract class MinigameManager : MonoBehaviour
         currentState = MinigameState.Playing;
     }
 
-    protected virtual void CompleteMinigame()
+    public virtual void CompleteMinigame()
     {
         if (currentState != MinigameState.Playing) return;
 
         currentState = MinigameState.Completed;
+
+        MinigameResults results = new MinigameResults
+        {
+            minigameName = minigameData.minigameName,
+            score = currentScore,
+            percentageHit = totalNotes > 0 ? (float)(earlyHits + perfectHits + lateHits) / totalNotes * 100f : 0f,
+            earlyHits = earlyHits,
+            perfectHits = perfectHits,
+            lateHits = lateHits,
+            missedHits = missedHits,
+            rank = CalculateRank(),
+            finalMultiplier = currentMultiplier,
+            maxMultiplier = maxMultiplier
+        };
+
+        MatchManager.Instance.StoreMinigameResults(results);
+
         OnMinigameCompleted?.Invoke();
 
-        ShowResults();
+        // ShowResults();
 
         // Delay the loading of next minigame
         Invoke("LoadNextMinigame", delayAfterSongEnd);
+    }
+
+    private string CalculateRank()
+    {
+        int totalHit = earlyHits + perfectHits + lateHits;
+        float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
+        float perfectPercent = totalNotes > 0 ? (float)perfectHits / totalNotes * 100f : 0f;
+
+        if (percentHit > 95 && perfectPercent > 80) return "S";
+        if (percentHit > 90 && perfectPercent > 60) return "A";
+        if (percentHit > 80) return "B";
+        if (percentHit > 70) return "C";
+        if (percentHit > 60) return "D";
+        return "F";
     }
 
     protected virtual void LoadNextMinigame()
@@ -173,15 +215,9 @@ public abstract class MinigameManager : MonoBehaviour
         }
     }
 
-    protected virtual void ShowResults()
-    {
-        resultsScreen.SetActive(true);
-        UpdateResultsUI();
-        CalculateAndShowRank();
-    }
-
     private void HandleMultiplierChanged(float newMultiplier)
     {
+        maxMultiplier = Mathf.Max(maxMultiplier, newMultiplier);
         currentMultiplier = newMultiplier;
         UpdateMultiplierText();
     }
@@ -197,22 +233,6 @@ public abstract class MinigameManager : MonoBehaviour
         float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
         percentHitText.text = percentHit.ToString("F1") + "%";
         finalScoreText.text = currentScore.ToString();
-    }
-
-    protected virtual void CalculateAndShowRank()
-    {
-        int totalHit = earlyHits + perfectHits + lateHits;
-        float percentHit = totalNotes > 0 ? (float)totalHit / totalNotes * 100f : 0f;
-        float perfectPercent = totalNotes > 0 ? (float)perfectHits / totalNotes * 100f : 0f;
-
-        string rankVal = "F";
-        if (percentHit > 95 && perfectPercent > 80) rankVal = "S";
-        else if (percentHit > 90 && perfectPercent > 60) rankVal = "A";
-        else if (percentHit > 80) rankVal = "B";
-        else if (percentHit > 70) rankVal = "C";
-        else if (percentHit > 60) rankVal = "D";
-
-        rankText.text = rankVal;
     }
 
     // Public methods for note tracking and scoring
