@@ -13,6 +13,8 @@ public class TextPunchAnimation : MonoBehaviour
     [SerializeField] private int vibrationCount = 5;
     [SerializeField] private float elasticity = 0.5f;
 
+    private Vector3 originalScale;
+
     private void Start()
     {
         // Auto-get component if not assigned
@@ -20,13 +22,11 @@ public class TextPunchAnimation : MonoBehaviour
         {
             targetText = GetComponent<TextMeshProUGUI>();
         }
+        originalScale = targetText.transform.localScale;
     }
 
     public void PlayPunchAnimation()
     {
-        // Store original scale
-        Vector3 originalScale = targetText.transform.localScale;
-
         // Create punch sequence
         Sequence punchSequence = DOTween.Sequence();
 
