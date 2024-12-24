@@ -234,7 +234,7 @@ public abstract class MinigameManager : MonoBehaviour
 
     protected virtual void UpdateMultiplierText()
     {
-        multiText.text = $"Multiplier: x{currentMultiplier:F1}";
+        multiText.text = $"x{currentMultiplier:F1}";
     }
 
     public virtual void NoteMissed()
